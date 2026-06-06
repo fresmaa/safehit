@@ -19,7 +19,7 @@ SafeHit is a modern, enterprise-grade Chrome Extension (Manifest V3) designed to
 
 ## 📂 Project Structure
 
-\`\`\`plaintext
+```plaintext
 /safehit
 ├── public/                 # Static assets (Icons)
 ├── src/
@@ -31,7 +31,6 @@ SafeHit is a modern, enterprise-grade Chrome Extension (Manifest V3) designed to
 ├── manifest.json           # Extension configuration
 ├── tailwind.config.js      # Tailwind setup
 └── vite.config.ts          # Vite build setup
-\`\`\`
 
 ## 🚀 Getting Started
 
