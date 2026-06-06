@@ -1,4 +1,3 @@
-// src/content/bridge.ts
 import { StorageHelper } from '../utils/storage';
 
 const syncConfigToMainWorld = async () => {
@@ -9,12 +8,9 @@ const syncConfigToMainWorld = async () => {
   }, '*');
 };
 
-// Eksekusi saat halaman pertama kali dimuat
 syncConfigToMainWorld();
 
-// 🟢 TAMBAHKAN BAGIAN INI: 
-// Mendengarkan perubahan storage secara real-time dan langsung mengirimnya ke Interceptor
-chrome.storage.onChanged.addListener((changes, namespace) => {
+chrome.storage.onChanged.addListener((changes: any, namespace: string) => {
   if (namespace === 'sync' && changes.safeHitConfig) {
     window.postMessage({
       source: 'SAFEHIT_BRIDGE',

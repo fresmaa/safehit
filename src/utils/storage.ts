@@ -17,7 +17,7 @@ export const StorageHelper = {
   // Mengambil konfigurasi dari Chrome Storage
   getConfig: async (): Promise<SafeHitConfig> => {
     return new Promise((resolve) => {
-      chrome.storage.sync.get(['safeHitConfig'], (result) => {
+      chrome.storage.sync.get(['safeHitConfig'], (result: any) => {
         // Kita gunakan 'as SafeHitConfig' agar TypeScript yakin
         const config = result.safeHitConfig as SafeHitConfig;
         resolve(config || DEFAULT_CONFIG);
