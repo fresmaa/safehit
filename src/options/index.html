@@ -1,0 +1,60 @@
+// src/options/index.ts
+import { storage } from '../utils/storage';
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const urlInput = document.getElementById('urlInput') as HTMLInputElement;
+  const addBtn = document.getElementById('addBtn') as HTMLButtonElement;
+  const urlList = document.getElementById('urlList') as HTMLUListElement;
+
+  // Fungsi untuk merender daftar URL ke DOM
+  const renderList = async () => {
+    urlList.innerHTML = '';
+    const urls = await storage.getProtectedUrls();
+
+    if (urls.length === 0) {
+      urlList.innerHTML = '<li class="text-gray-500 italic text-sm">No URLs protected yet.</li>';
+      return;
+    }
+
+    urls.forEach((url) => {
+      const li = document.createElement('li');
+      li.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200';
+      
+      const span = document.createElement('span');
+      span.className = 'text-gray-700 font-mono text-sm';
+      span.textContent = url;
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-1 rounded transition-colors text-sm font-medium';
+      deleteBtn.textContent = 'Remove';
+      deleteBtn.onclick = async () => {
+        await storage.removeProtectedUrl(url);
+        renderList(); // Re-render setelah dihapus
+      };
+
+      li.appendChild(span);
+      li.appendChild(deleteBtn);
+      urlList.appendChild(li);
+    });
+  };
+
+  // Event handler untuk tombol Add
+  addBtn.addEventListener('click', async () => {
+    const newUrl = urlInput.value.trim();
+    if (newUrl) {
+      await storage.addProtectedUrl(newUrl);
+      urlInput.value = '';
+      renderList(); // Re-render setelah ditambah
+    }
+  });
+
+  // Event handler untuk menekan "Enter" di input
+  urlInput.addEventListener('keypress', async (e) => {
+    if (e.key === 'Enter') {
+      addBtn.click();
+    }
+  });
+
+  // Render awal saat halaman dimuat
+  renderList();
+});
