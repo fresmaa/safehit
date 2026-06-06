@@ -31,6 +31,7 @@ SafeHit is a modern, enterprise-grade Chrome Extension (Manifest V3) designed to
 ├── manifest.json           # Extension configuration
 ├── tailwind.config.js      # Tailwind setup
 └── vite.config.ts          # Vite build setup
+```
 
 ## 🚀 Getting Started
 
@@ -40,20 +41,18 @@ Make sure you have [Node.js](https://nodejs.org/) installed (v16 or higher recom
 ### Installation
 
 1. Clone this repository.
-   \`\`\`bash
+   ```bash
    git clone <repository-url>
    cd safehit
-   \`\`\`
-
+   
 2. Install dependencies.
-   \`\`\`bash
+   ```bash
    npm install
-   \`\`\`
 
 3. Build the extension for development (with Hot Module Replacement).
-   \`\`\`bash
+   ```bash
    npm run build
-   \`\`\`
+   ```
    *(Note: The `dist/` folder will be generated).*
 
 ### Loading into Chrome
