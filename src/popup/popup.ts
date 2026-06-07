@@ -1,15 +1,14 @@
-// src/popup/popup.ts
-import '../styles/tailwind.css'; // Pastikan ini ada!
-import { StorageHelper, SafeHitConfig } from '../utils/storage';
+import "../styles/tailwind.css";
+import { StorageHelper, SafeHitConfig } from "../utils/storage";
 
-document.addEventListener('DOMContentLoaded', () => {
-  const urlInput = document.getElementById('url-input') as HTMLInputElement;
-  const addBtn = document.getElementById('add-btn') as HTMLButtonElement;
-  const urlList = document.getElementById('url-list') as HTMLUListElement;
+document.addEventListener("DOMContentLoaded", () => {
+  const urlInput = document.getElementById("url-input") as HTMLInputElement;
+  const addBtn = document.getElementById("add-btn") as HTMLButtonElement;
+  const urlList = document.getElementById("url-list") as HTMLUListElement;
 
   const renderUrls = async () => {
     const config: SafeHitConfig = await StorageHelper.getConfig();
-    urlList.innerHTML = '';
+    urlList.innerHTML = "";
 
     if (config.blockedUrls.length === 0) {
       urlList.innerHTML = `
@@ -21,11 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    config.blockedUrls.forEach(url => {
-      const li = document.createElement('div');
-      // Kontras lebih tegas untuk list item
-      li.className = 'group flex items-center justify-between bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 px-4 py-3 rounded-xl transition-all cursor-default';
-      
+    config.blockedUrls.forEach((url) => {
+      const li = document.createElement("div");
+      li.className =
+        "group flex items-center justify-between bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 px-4 py-3 rounded-xl transition-all cursor-default";
+
       li.innerHTML = `
         <div class="flex items-center gap-3 overflow-hidden">
           <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
@@ -38,12 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
       urlList.appendChild(li);
     });
 
-    // Pasang ulang event listener untuk tombol hapus
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
+    // Reattach event listeners for delete buttons
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
         const targetUrl = (e.currentTarget as HTMLButtonElement).dataset.url;
         if (targetUrl) {
-          const newConfig = { ...config, blockedUrls: config.blockedUrls.filter(u => u !== targetUrl) };
+          const newConfig = {
+            ...config,
+            blockedUrls: config.blockedUrls.filter((u) => u !== targetUrl),
+          };
           await StorageHelper.saveConfig(newConfig);
           renderUrls();
         }
@@ -51,20 +53,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // ... (Sisa event listener addBtn dan input persis seperti sebelumnya) ...
-  addBtn.addEventListener('click', async () => {
+  addBtn.addEventListener("click", async () => {
     const newUrl = urlInput.value.trim();
     if (!newUrl) return;
     const config = await StorageHelper.getConfig();
     if (!config.blockedUrls.includes(newUrl)) {
-      await StorageHelper.saveConfig({ ...config, blockedUrls: [...config.blockedUrls, newUrl] });
-      urlInput.value = '';
+      await StorageHelper.saveConfig({
+        ...config,
+        blockedUrls: [...config.blockedUrls, newUrl],
+      });
+      urlInput.value = "";
       renderUrls();
     }
   });
 
-  urlInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') addBtn.click();
+  urlInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") addBtn.click();
   });
 
   renderUrls();

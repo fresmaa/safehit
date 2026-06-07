@@ -1,4 +1,3 @@
-// Interface untuk struktur data kita
 export interface SafeHitConfig {
   blockedUrls: string[];
   mockRules: {
@@ -14,18 +13,18 @@ const DEFAULT_CONFIG: SafeHitConfig = {
 };
 
 export const StorageHelper = {
-  // Mengambil konfigurasi dari Chrome Storage
+  // Retrieves configuration from Chrome Storage
   getConfig: async (): Promise<SafeHitConfig> => {
     return new Promise((resolve) => {
       chrome.storage.sync.get(['safeHitConfig'], (result: any) => {
-        // Kita gunakan 'as SafeHitConfig' agar TypeScript yakin
+        // Assert as SafeHitConfig for TypeScript type safety
         const config = result.safeHitConfig as SafeHitConfig;
         resolve(config || DEFAULT_CONFIG);
       });
     });
   },
 
-  // Menyimpan konfigurasi baru ke Chrome Storage
+  // Saves configuration to Chrome Storage
   saveConfig: async (newConfig: SafeHitConfig): Promise<void> => {
     return new Promise((resolve) => {
       chrome.storage.sync.set({ safeHitConfig: newConfig }, () => {

@@ -1,4 +1,3 @@
-// src/options/index.ts
 import { storage } from '../utils/storage';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -6,7 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const addBtn = document.getElementById('addBtn') as HTMLButtonElement;
   const urlList = document.getElementById('urlList') as HTMLUListElement;
 
-  // Fungsi untuk merender daftar URL ke DOM
+  // Function to render the list of protected URLs to the DOM
   const renderList = async () => {
     urlList.innerHTML = '';
     const urls = await storage.getProtectedUrls();
@@ -29,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       deleteBtn.textContent = 'Remove';
       deleteBtn.onclick = async () => {
         await storage.removeProtectedUrl(url);
-        renderList(); // Re-render setelah dihapus
+        renderList();
       };
 
       li.appendChild(span);
@@ -38,23 +37,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
-  // Event handler untuk tombol Add
   addBtn.addEventListener('click', async () => {
     const newUrl = urlInput.value.trim();
     if (newUrl) {
       await storage.addProtectedUrl(newUrl);
       urlInput.value = '';
-      renderList(); // Re-render setelah ditambah
+      renderList();
     }
   });
 
-  // Event handler untuk menekan "Enter" di input
   urlInput.addEventListener('keypress', async (e) => {
     if (e.key === 'Enter') {
       addBtn.click();
     }
   });
 
-  // Render awal saat halaman dimuat
+  // Initial render on page load
   renderList();
 });

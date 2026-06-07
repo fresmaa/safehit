@@ -15,7 +15,7 @@ const languages = {
   }
 };
 
-// Ubah 'en' menjadi 'id' jika ingin default ke Bahasa Indonesia
+// Change 'en' to 'id' to set Indonesian as the default language
 type LanguageKey = keyof typeof languages.en;
 const currentLang = 'en'; 
 

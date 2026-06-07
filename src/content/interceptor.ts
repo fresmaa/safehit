@@ -1,11 +1,10 @@
-// src/content/interceptor.ts
 import { showWarningModal } from './ui';
 import { SafeHitConfig } from '../utils/storage';
 
-// Inisialisasi config kosong, akan diisi oleh bridge.ts
+// Initialize empty config, to be populated by bridge.ts
 let activeConfig: SafeHitConfig = { blockedUrls: [], mockRules: [] };
 
-// Dengarkan pesan dari ISOLATED world
+// Listen for messages from the ISOLATED world
 window.addEventListener('message', (event) => {
   if (event.data && event.data.source === 'SAFEHIT_BRIDGE') {
     activeConfig = event.data.payload;
@@ -13,7 +12,7 @@ window.addEventListener('message', (event) => {
   }
 });
 
-// Timpa fetch aslinya
+// Override the original fetch function
 const originalFetch = window.fetch;
 
 window.fetch = async function (...args) {
@@ -22,7 +21,6 @@ window.fetch = async function (...args) {
   const method = (configObj?.method || 'GET').toUpperCase();
   const isMutation = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method);
   
-  // Gunakan activeConfig yang didapat dari postMessage
   const isProductionUrl = activeConfig.blockedUrls.some((u) => url.includes(u));
 
   if (isMutation && isProductionUrl) {

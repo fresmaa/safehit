@@ -1,4 +1,3 @@
-// src/content/ui.ts
 import { t } from '../utils/i18n';
 
 export const showWarningModal = (method: string, url: string): Promise<boolean> => {
@@ -120,7 +119,7 @@ export const showWarningModal = (method: string, url: string): Promise<boolean> 
     shadow.appendChild(wrapper);
 
     const close = (result: boolean) => {
-      // Tambahkan animasi keluar sebelum menghapus DOM
+      // Add exit animation before removing from DOM
       const overlay = shadow.querySelector('.overlay') as HTMLElement;
       overlay.style.opacity = '0';
       overlay.style.transition = 'opacity 0.2s ease';
