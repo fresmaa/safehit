@@ -3,7 +3,7 @@ export interface SafeHitConfig {
   mockRules: {
     url: string;
     method: string;
-    responseBody: string; // JSON string
+    responseBody: string;
   }[];
 }
 
