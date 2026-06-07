@@ -1,14 +1,17 @@
-import { t } from '../utils/i18n';
+import { t } from "../utils/i18n";
 
-export const showWarningModal = (method: string, url: string): Promise<boolean> => {
+export const showWarningModal = (
+  method: string,
+  url: string,
+): Promise<boolean> => {
   return new Promise((resolve) => {
-    const container = document.createElement('div');
-    container.id = 'safehit-root';
+    const container = document.createElement("div");
+    container.id = "safehit-root";
     document.body.appendChild(container);
-    
-    const shadow = container.attachShadow({ mode: 'closed' });
-    const wrapper = document.createElement('div');
-    
+
+    const shadow = container.attachShadow({ mode: "closed" });
+    const wrapper = document.createElement("div");
+
     wrapper.innerHTML = `
       <style>
         :host {
@@ -104,15 +107,15 @@ export const showWarningModal = (method: string, url: string): Promise<boolean> 
           <div class="icon-container">
             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
           </div>
-          <h2 class="title">${t('title')}</h2>
+          <h2 class="title">${t("title")}</h2>
           <div class="info-box">
             <p class="info-text">
-              ${t('warning')} <span class="method-badge">${method}</span> ${t('methodLabel')}
+              ${t("warning")} <span class="method-badge">${method}</span> ${t("methodLabel")}
               <span class="url-text">${url}</span>
             </p>
           </div>
-          <button id="btn-submit" class="btn-submit">${t('buttonProceed')}</button>
-          <button id="btn-cancel" class="btn-cancel">${t('buttonCancel')}</button>
+          <button id="btn-submit" class="btn-submit">${t("buttonProceed")}</button>
+          <button id="btn-cancel" class="btn-cancel">${t("buttonCancel")}</button>
         </div>
       </div>
     `;
@@ -120,13 +123,20 @@ export const showWarningModal = (method: string, url: string): Promise<boolean> 
 
     const close = (result: boolean) => {
       // Add exit animation before removing from DOM
-      const overlay = shadow.querySelector('.overlay') as HTMLElement;
-      overlay.style.opacity = '0';
-      overlay.style.transition = 'opacity 0.2s ease';
-      setTimeout(() => { container.remove(); resolve(result); }, 200);
+      const overlay = shadow.querySelector(".overlay") as HTMLElement;
+      overlay.style.opacity = "0";
+      overlay.style.transition = "opacity 0.2s ease";
+      setTimeout(() => {
+        container.remove();
+        resolve(result);
+      }, 200);
     };
 
-    shadow.getElementById('btn-cancel')?.addEventListener('click', () => close(false));
-    shadow.getElementById('btn-submit')?.addEventListener('click', () => close(true));
+    shadow
+      .getElementById("btn-cancel")
+      ?.addEventListener("click", () => close(false));
+    shadow
+      .getElementById("btn-submit")
+      ?.addEventListener("click", () => close(true));
   });
 };

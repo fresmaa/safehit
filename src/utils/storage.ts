@@ -9,14 +9,14 @@ export interface SafeHitConfig {
 
 const DEFAULT_CONFIG: SafeHitConfig = {
   blockedUrls: [],
-  mockRules: []
+  mockRules: [],
 };
 
 export const StorageHelper = {
   // Retrieves configuration from Chrome Storage
   getConfig: async (): Promise<SafeHitConfig> => {
     return new Promise((resolve) => {
-      chrome.storage.sync.get(['safeHitConfig'], (result: any) => {
+      chrome.storage.sync.get(["safeHitConfig"], (result: any) => {
         // Assert as SafeHitConfig for TypeScript type safety
         const config = result.safeHitConfig as SafeHitConfig;
         resolve(config || DEFAULT_CONFIG);
@@ -31,5 +31,5 @@ export const StorageHelper = {
         resolve();
       });
     });
-  }
+  },
 };
