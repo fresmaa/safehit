@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "SafeHit",
   "version": "1.0.0",
-  "description": "Enterprise-grade safeguard and mocking tool.",
+  "description": "Protect production environments from accidental data mutations.",
   "permissions": ["storage"],
   "options_page": "src/options/index.html",
   "action": {
