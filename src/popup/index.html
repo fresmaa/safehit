@@ -6,78 +6,125 @@
     <title>SafeHit Popup</title>
   </head>
   <body
-    class="bg-[#09090b] text-zinc-100 font-sans w-[350px] min-h-[400px] m-0 overflow-hidden relative selection:bg-violet-500/30"
+    class="w-80 bg-[#09090b] text-zinc-100 font-sans m-0 p-5 selection:bg-violet-500/30"
   >
-    <div
-      class="absolute top-[-20%] left-[-10%] w-[200px] h-[200px] bg-violet-600/20 rounded-full blur-[80px] pointer-events-none"
-    ></div>
-    <div
-      class="absolute bottom-[-10%] right-[-20%] w-[200px] h-[200px] bg-blue-600/10 rounded-full blur-[80px] pointer-events-none"
-    ></div>
-
-    <div class="relative z-10 h-full flex flex-col">
-      <header
-        class="p-5 flex items-center gap-3 border-b border-white/5 bg-white/[0.01] backdrop-blur-xl"
+    <header class="flex items-center gap-3 border-b border-white/10 pb-4 mb-4">
+      <div
+        class="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center"
       >
-        <div
-          class="w-9 h-9 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center"
+        <svg
+          class="w-4 h-4 text-violet-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
         >
-          <svg
-            class="w-4 h-4 text-violet-400"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
+          <path
             stroke-linecap="round"
             stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.963 11.963 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+          ></path>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-sm font-bold text-white tracking-tight">SafeHit</h1>
+        <p class="text-[10px] text-zinc-400">Environment Safeguard</p>
+      </div>
+    </header>
+
+    <div class="flex p-1 bg-white/[0.04] rounded-xl mb-5 border border-white/5">
+      <button
+        id="btn-tab-safeguard"
+        class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-white/10 text-white shadow-sm transition-all"
+      >
+        🛡️ Safeguard
+      </button>
+      <button
+        id="btn-tab-mocking"
+        class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-zinc-500 hover:text-white transition-all"
+      >
+        🎭 Mocking
+      </button>
+    </div>
+
+    <div id="content-safeguard" class="block">
+      <label
+        class="block text-[10px] font-bold text-zinc-500 mb-1.5 uppercase tracking-wider"
+        >Target URL</label
+      >
+      <div class="flex gap-3 mb-6">
+        <input
+          type="text"
+          id="url-input"
+          placeholder="e.g., api.production.com"
+          class="flex-1 bg-black/50 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition-all shadow-inner"
+        />
+        <button
+          id="add-btn"
+          class="bg-white text-black px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:bg-zinc-200 active:scale-95 shadow-sm"
+        >
+          Add
+        </button>
+      </div>
+
+      <label
+        class="block text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-wider"
+        >Active Protections</label
+      >
+      <div
+        id="url-list"
+        class="space-y-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar"
+      ></div>
+    </div>
+
+    <div id="content-mocking" class="hidden">
+      <div
+        class="flex flex-col items-center justify-center text-center py-4 bg-white/[0.02] border border-white/5 rounded-2xl mb-4"
+      >
+        <div
+          class="w-12 h-12 bg-violet-500/10 rounded-full flex items-center justify-center mb-3"
+        >
+          <svg
+            class="w-6 h-6 text-violet-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            stroke-width="2"
           >
             <path
-              d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
             ></path>
           </svg>
         </div>
-        <div>
-          <h1 class="text-sm font-bold text-zinc-100 tracking-wide">SafeHit</h1>
-          <p class="text-[11px] text-zinc-500 font-medium mt-0.5">
-            Environment Safeguard
-          </p>
-        </div>
-      </header>
+        <h3 class="text-sm font-bold text-white mb-1">API Mocking</h3>
+        <p class="text-xs text-zinc-400">
+          You have
+          <span id="mock-count" class="font-bold text-violet-400 px-1">0</span>
+          active rules.
+        </p>
+      </div>
 
-      <main class="p-5 flex-1">
-        <div class="mb-6">
-          <label
-            class="block text-[10px] font-bold text-zinc-400 mb-2 uppercase tracking-widest"
-            >Target URL</label
-          >
-          <div class="flex gap-2">
-            <input
-              type="text"
-              id="url-input"
-              placeholder="e.g., api.production.com"
-              class="flex-1 bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-[13px] text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all shadow-inner"
-            />
-            <button
-              id="add-btn"
-              class="bg-zinc-100 hover:bg-white text-zinc-900 px-4 py-2 rounded-xl text-[13px] font-bold transition-all active:scale-95 shadow-sm shrink-0"
-            >
-              Add
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <h2
-            class="text-[10px] font-bold text-zinc-400 mb-3 uppercase tracking-widest"
-          >
-            Active Protections
-          </h2>
-          <div
-            class="h-[180px] overflow-y-auto pr-2 -mr-2 space-y-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
-            id="url-list"
-          ></div>
-        </div>
-      </main>
+      <button
+        id="open-mock-dashboard"
+        class="w-full flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-lg shadow-violet-900/20"
+      >
+        Open Full Dashboard
+        <svg
+          class="w-3.5 h-3.5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+          ></path>
+        </svg>
+      </button>
     </div>
 
     <script type="module" src="./popup.ts"></script>

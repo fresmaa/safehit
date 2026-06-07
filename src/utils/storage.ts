@@ -1,16 +1,25 @@
 export interface SafeHitConfig {
   blockedUrls: string[];
-  mockRules: {
-    url: string;
-    method: string;
-    responseBody: string;
-  }[];
+  mockRules: MockRule[];
 }
 
 const DEFAULT_CONFIG: SafeHitConfig = {
   blockedUrls: [],
   mockRules: [],
 };
+
+export interface MockRule {
+  id: string;
+  url: string;
+  method: string;
+  status: number;
+  responseBody: string;
+}
+
+export interface SafeHitConfig {
+  blockedUrls: string[];
+  mockRules: MockRule[];
+}
 
 export const StorageHelper = {
   // Retrieves configuration from Chrome Storage
