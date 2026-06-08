@@ -27,7 +27,7 @@ window.fetch = async function (...args) {
 
   if (activeConfig.mockRules && activeConfig.mockRules.length > 0) {
     const matchedRule = activeConfig.mockRules.find(
-      (rule) => rule.method === method && url.includes(rule.url),
+      (rule) => rule.active && rule.method === method && url.includes(rule.url)
     );
 
     if (matchedRule) {

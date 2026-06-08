@@ -4,6 +4,7 @@ export interface MockRule {
   method: string;
   status: number;
   responseBody: string;
+  active: boolean;
 }
 
 export interface SafeguardRule {
@@ -28,6 +29,10 @@ export const StorageHelper = {
 
         config.blockedUrls = (config.blockedUrls || []).map((item: any) => {
           return typeof item === "string" ? { url: item, active: true } : item;
+        });
+
+        config.mockRules = (config.mockRules || []).map((item: any) => {
+          return item.active === undefined ? { ...item, active: true } : item;
         });
 
         resolve(config);
