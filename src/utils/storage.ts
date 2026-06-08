@@ -1,13 +1,3 @@
-export interface SafeHitConfig {
-  blockedUrls: string[];
-  mockRules: MockRule[];
-}
-
-const DEFAULT_CONFIG: SafeHitConfig = {
-  blockedUrls: [],
-  mockRules: [],
-};
-
 export interface MockRule {
   id: string;
   url: string;
@@ -16,8 +6,13 @@ export interface MockRule {
   responseBody: string;
 }
 
+export interface SafeguardRule {
+  url: string;
+  active: boolean;
+}
+
 export interface SafeHitConfig {
-  blockedUrls: string[];
+  blockedUrls: SafeguardRule[];
   mockRules: MockRule[];
 }
 
@@ -25,10 +20,17 @@ export const StorageHelper = {
   // Retrieves configuration from Chrome Storage
   getConfig: async (): Promise<SafeHitConfig> => {
     return new Promise((resolve) => {
-      chrome.storage.sync.get(["safeHitConfig"], (result: any) => {
-        // Assert as SafeHitConfig for TypeScript type safety
-        const config = result.safeHitConfig as SafeHitConfig;
-        resolve(config || DEFAULT_CONFIG);
+      chrome.storage.sync.get("safeHitConfig", (data) => {
+        let config = (data.safeHitConfig as SafeHitConfig) || {
+          blockedUrls: [],
+          mockRules: [],
+        };
+
+        config.blockedUrls = (config.blockedUrls || []).map((item: any) => {
+          return typeof item === "string" ? { url: item, active: true } : item;
+        });
+
+        resolve(config);
       });
     });
   },

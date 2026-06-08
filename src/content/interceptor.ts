@@ -44,7 +44,9 @@ window.fetch = async function (...args) {
   }
 
   const isMutation = ["POST", "PUT", "PATCH", "DELETE"].includes(method);
-  const isProductionUrl = activeConfig.blockedUrls.some((u) => url.includes(u));
+  const isProductionUrl = activeConfig.blockedUrls.some(
+    (rule) => rule.active && url.includes(rule.url)
+  );
 
   if (isMutation && isProductionUrl) {
     console.log(`[SafeHit] 🛡️ SAFEGUARD BLOCKED: ${method} ${url}`);
