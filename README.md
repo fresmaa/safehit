@@ -1,4 +1,4 @@
-# 🛡️ SafeHit - Enterprise QA Safeguard & Mocking Tool
+# 🛡️ SafeHit - QA Safeguard & Mocking Tool
 
 SafeHit is a modern, enterprise-grade Chrome Extension (Manifest V3) designed to protect Production environments from accidental CRUD operations by QA teams, while also providing a robust API Mocking engine.
 
