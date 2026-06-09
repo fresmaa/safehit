@@ -321,6 +321,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabHeadersBtn = document.getElementById(
     "tab-headers-btn",
   ) as HTMLButtonElement;
+  const tabParamsBtn = document.getElementById(
+    "tab-params-btn",
+  ) as HTMLButtonElement;
   const clientBodyContainer = document.getElementById(
     "client-body-editor",
   ) as HTMLDivElement;
@@ -373,27 +376,9 @@ document.addEventListener("DOMContentLoaded", () => {
     parent: document.getElementById("client-response-editor") as HTMLDivElement,
   });
 
-  tabBodyBtn.addEventListener("click", () => {
-    tabBodyBtn.className =
-      "px-3 py-1 text-[10px] font-bold text-zinc-300 bg-white/10 rounded-md transition-colors";
-    tabHeadersBtn.className =
-      "px-3 py-1 text-[10px] font-bold text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-md transition-colors";
-    clientBodyContainer.classList.remove("hidden");
-    clientHeadersContainer.classList.add("hidden");
-  });
-
-  tabHeadersBtn.addEventListener("click", () => {
-    tabHeadersBtn.className =
-      "px-3 py-1 text-[10px] font-bold text-zinc-300 bg-white/10 rounded-md transition-colors";
-    tabBodyBtn.className =
-      "px-3 py-1 text-[10px] font-bold text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-md transition-colors";
-    clientHeadersContainer.classList.remove("hidden");
-    clientBodyContainer.classList.add("hidden");
-  });
-
-  const tabParamsBtn = document.getElementById(
-    "tab-params-btn",
-  ) as HTMLButtonElement;
+  tabBodyBtn.addEventListener("click", () => switchEditorTab("body"));
+  tabHeadersBtn.addEventListener("click", () => switchEditorTab("headers"));
+  tabParamsBtn.addEventListener("click", () => switchEditorTab("params"));
 
   const switchEditorTab = (activeTab: "body" | "headers" | "params") => {
     const activeStyle =
@@ -407,12 +392,12 @@ document.addEventListener("DOMContentLoaded", () => {
     tabParamsBtn.className =
       activeTab === "params" ? activeStyle : inactiveStyle;
 
-    clientBodyContainer.classList.toggle("hidden", activeTab !== "body");
-    clientHeadersContainer.classList.toggle("hidden", activeTab !== "headers");
-    clientParamsContainer.classList.toggle("hidden", activeTab !== "params");
+    clientBodyContainer.style.display = activeTab === "body" ? "block" : "none";
+    clientHeadersContainer.style.display =
+      activeTab === "headers" ? "block" : "none";
+    clientParamsContainer.style.display =
+      activeTab === "params" ? "block" : "none";
   };
-
-  tabParamsBtn.addEventListener("click", () => switchEditorTab("params"));
 
   clientMethodTrigger.addEventListener("click", (e) => {
     e.stopPropagation();
