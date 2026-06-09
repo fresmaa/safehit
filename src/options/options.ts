@@ -340,6 +340,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const clientMethodArrow = document.getElementById(
     "client-method-arrow",
   ) as HTMLElement;
+  const clientParamsContainer = document.getElementById(
+    "client-params-editor",
+  ) as HTMLDivElement;
 
   const clientBodyEditor = new EditorView({
     doc: "{\n  \n}",
@@ -350,6 +353,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const clientHeadersEditor = new EditorView({
     extensions: [basicSetup, json(), oneDark],
     parent: document.getElementById("client-headers-editor") as HTMLDivElement,
+  });
+
+  const clientParamsEditor = new EditorView({
+    doc: "{\n  \n}",
+    extensions: [basicSetup, json(), oneDark],
+    parent: document.getElementById("client-params-editor") as HTMLDivElement,
   });
 
   const clientResponseEditor = new EditorView({
@@ -381,6 +390,29 @@ document.addEventListener("DOMContentLoaded", () => {
     clientHeadersContainer.classList.remove("hidden");
     clientBodyContainer.classList.add("hidden");
   });
+
+  const tabParamsBtn = document.getElementById(
+    "tab-params-btn",
+  ) as HTMLButtonElement;
+
+  const switchEditorTab = (activeTab: "body" | "headers" | "params") => {
+    const activeStyle =
+      "px-3 py-1 text-[10px] font-bold text-zinc-300 bg-white/10 rounded-md transition-colors";
+    const inactiveStyle =
+      "px-3 py-1 text-[10px] font-bold text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-md transition-colors";
+
+    tabBodyBtn.className = activeTab === "body" ? activeStyle : inactiveStyle;
+    tabHeadersBtn.className =
+      activeTab === "headers" ? activeStyle : inactiveStyle;
+    tabParamsBtn.className =
+      activeTab === "params" ? activeStyle : inactiveStyle;
+
+    clientBodyContainer.classList.toggle("hidden", activeTab !== "body");
+    clientHeadersContainer.classList.toggle("hidden", activeTab !== "headers");
+    clientParamsContainer.classList.toggle("hidden", activeTab !== "params");
+  };
+
+  tabParamsBtn.addEventListener("click", () => switchEditorTab("params"));
 
   clientMethodTrigger.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -508,10 +540,11 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   clientSendBtn.addEventListener("click", async () => {
-    const targetUrl = clientUrlInput.value.trim();
+    let targetUrl = clientUrlInput.value.trim();
     const method = clientMethodInput.value;
     const bodyText = clientBodyEditor.state.doc.toString().trim();
 
+    // Validasi Headers
     const headersText = clientHeadersEditor.state.doc.toString().trim();
     let customHeadersObj = {};
     if (headersText && headersText !== "{\n  \n}" && headersText !== "{}") {
@@ -523,13 +556,42 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    const paramsText = clientParamsEditor.state.doc.toString().trim();
+    let customParamsObj: Record<string, string> = {};
+    if (paramsText && paramsText !== "{\n  \n}" && paramsText !== "{}") {
+      try {
+        customParamsObj = JSON.parse(paramsText);
+      } catch (e) {
+        alert("Invalid JSON format in Params tab!");
+        return;
+      }
+    }
+
     if (!targetUrl) {
       alert("Please enter a valid Target URL!");
       return;
     }
 
+    if (Object.keys(customParamsObj).length > 0) {
+      try {
+        const urlObj = new URL(targetUrl);
+        Object.entries(customParamsObj).forEach(([key, value]) => {
+          urlObj.searchParams.append(key, String(value));
+        });
+        targetUrl = urlObj.toString();
+      } catch (e) {
+        alert(
+          "Invalid Target URL format! Please ensure it starts with http:// or https://",
+        );
+        return;
+      }
+    }
+
     clientSendBtn.disabled = true;
     clientSendBtn.textContent = "Executing via Tab...";
+    clientStatusSpan.textContent = "STATUS: LOADING";
+    clientStatusSpan.className =
+      "font-mono text-[10px] px-2 py-1 rounded bg-yellow-500/20 text-yellow-400 border border-yellow-500/10 shadow-sm";
 
     try {
       const selectedTabId = parseInt(clientTabInput.value);
@@ -549,7 +611,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         (response) => {
           clientSendBtn.disabled = false;
-          clientSendBtn.textContent = "Execute Request";
+          clientSendBtn.innerHTML = `Send Request <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>`;
 
           if (chrome.runtime.lastError || !response) {
             const errMsg =
@@ -575,7 +637,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     } catch (error: any) {
       clientSendBtn.disabled = false;
-      clientSendBtn.textContent = "Execute Request";
+      clientSendBtn.innerHTML = `Send Request <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>`;
       updateResponseEditor(`// Error:\n${error.message}`, 0);
     }
   });
