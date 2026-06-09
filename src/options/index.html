@@ -3,18 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SafeHit - API Mocking Dashboard</title>
+    <title>SafeHit Dashboard</title>
   </head>
   <body
-    class="bg-[#09090b] text-zinc-100 font-sans min-h-screen m-0 selection:bg-violet-500/30 p-8"
+    class="bg-[#09090b] text-zinc-100 font-sans m-0 h-screen overflow-hidden flex selection:bg-violet-500/30"
   >
-    <div class="max-w-6xl mx-auto">
-      <header class="mb-10 flex items-center gap-4">
+    <aside class="w-64 border-r border-white/5 bg-black/20 flex flex-col">
+      <div class="p-6 border-b border-white/5 flex items-center gap-3">
         <div
-          class="w-12 h-12 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center shadow-lg shadow-violet-900/20"
+          class="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center shadow-lg shadow-violet-900/20"
         >
           <svg
-            class="w-6 h-6 text-violet-400"
+            class="w-5 h-5 text-violet-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -23,131 +23,447 @@
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.963 11.963 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
             ></path>
           </svg>
         </div>
         <div>
-          <h1 class="text-2xl font-bold text-white tracking-tight">
-            API Mocking Engine
-          </h1>
-          <p class="text-zinc-400 text-sm mt-1">
-            Intercept requests and return custom JSON payloads.
+          <h1 class="text-lg font-bold text-white tracking-tight">SafeHit</h1>
+          <p
+            class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold"
+          >
+            Workspace
           </p>
         </div>
-      </header>
+      </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <section
-          class="lg:col-span-5 bg-white/[0.02] border border-white/5 p-6 rounded-2xl shadow-xl backdrop-blur-sm h-fit"
+      <nav class="flex-1 p-4 space-y-2">
+        <button
+          id="nav-mocking"
+          class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-white/10 text-white transition-all"
         >
-          <h2
-            class="text-sm font-bold text-zinc-300 mb-5 uppercase tracking-widest border-b border-white/5 pb-3"
+          <svg
+            class="w-5 h-5 text-violet-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            Create New Rule
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+            ></path>
+          </svg>
+          Mocking Engine
+        </button>
+
+        <button
+          id="nav-client"
+          class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-zinc-400 hover:bg-white/5 hover:text-white transition-all"
+        >
+          <svg
+            class="w-5 h-5 text-blue-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            ></path>
+          </svg>
+          API Client Tester
+        </button>
+      </nav>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto p-8 relative">
+      <section id="view-mocking" class="block max-w-7xl mx-auto pb-12">
+        <header class="mb-8">
+          <h2 class="text-2xl font-bold text-white tracking-tight">
+            API Mocking Engine
           </h2>
+          <p class="text-zinc-400 text-sm mt-1">
+            Intercept requests and return custom JSON payloads on the fly.
+          </p>
+        </header>
 
-          <div class="space-y-4">
-            <div class="flex gap-4">
-              <div class="w-1/3">
-                <label class="block text-xs font-semibold text-zinc-500 mb-1.5"
-                  >Method</label
-                >
-                <div class="relative">
-                  <select
-                    id="mock-method"
-                    class="w-full appearance-none bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 pr-10 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 transition-all cursor-pointer shadow-inner"
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div
+            class="lg:col-span-5 bg-white/[0.02] border border-white/5 p-6 rounded-2xl shadow-xl backdrop-blur-sm h-fit"
+          >
+            <h3
+              class="text-sm font-bold text-zinc-300 mb-5 uppercase tracking-widest border-b border-white/5 pb-3"
+            >
+              Create / Edit Rule
+            </h3>
+            <div class="space-y-4">
+              <div class="flex gap-4">
+                <div class="w-1/3">
+                  <label
+                    class="block text-xs font-semibold text-zinc-500 mb-1.5"
+                    >Method</label
                   >
-                    <option value="GET" class="bg-zinc-900 text-white">
-                      GET
-                    </option>
-                    <option value="POST" class="bg-zinc-900 text-white">
-                      POST
-                    </option>
-                    <option value="PUT" class="bg-zinc-900 text-white">
-                      PUT
-                    </option>
-                    <option value="PATCH" class="bg-zinc-900 text-white">
-                      PATCH
-                    </option>
-                    <option value="DELETE" class="bg-zinc-900 text-white">
-                      DELETE
-                    </option>
-                  </select>
-
-                  <div
-                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-400"
-                  >
-                    <svg
-                      class="h-4 w-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  <div class="relative w-full" id="custom-select-container">
+                    <input type="hidden" id="mock-method" value="GET" />
+                    <button
+                      type="button"
+                      id="method-trigger"
+                      class="w-full flex items-center justify-between bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 transition-all shadow-inner text-blue-400"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                      ></path>
-                    </svg>
+                      <span id="method-selected-text">GET</span>
+                      <svg
+                        id="method-arrow"
+                        class="h-4 w-4 text-zinc-400 transition-transform duration-200"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 9l-7 7-7-7"
+                        ></path>
+                      </svg>
+                    </button>
+                    <div
+                      id="method-dropdown"
+                      class="hidden absolute z-50 w-full mt-2 bg-[#18181b] border border-white/10 rounded-xl shadow-2xl overflow-hidden py-1.5 backdrop-blur-md"
+                    >
+                      <div
+                        class="method-option px-4 py-2 text-sm font-bold text-blue-400 hover:bg-white/10 cursor-pointer"
+                        data-value="GET"
+                      >
+                        GET
+                      </div>
+                      <div
+                        class="method-option px-4 py-2 text-sm font-bold text-green-400 hover:bg-white/10 cursor-pointer"
+                        data-value="POST"
+                      >
+                        POST
+                      </div>
+                      <div
+                        class="method-option px-4 py-2 text-sm font-bold text-yellow-400 hover:bg-white/10 cursor-pointer"
+                        data-value="PUT"
+                      >
+                        PUT
+                      </div>
+                      <div
+                        class="method-option px-4 py-2 text-sm font-bold text-orange-400 hover:bg-white/10 cursor-pointer"
+                        data-value="PATCH"
+                      >
+                        PATCH
+                      </div>
+                      <div
+                        class="method-option px-4 py-2 text-sm font-bold text-red-400 hover:bg-white/10 cursor-pointer"
+                        data-value="DELETE"
+                      >
+                        DELETE
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-2/3">
+                  <label
+                    class="block text-xs font-semibold text-zinc-500 mb-1.5"
+                    >Target URL (Contains)</label
+                  >
+                  <input
+                    type="text"
+                    id="mock-url"
+                    placeholder="/api/v1/users"
+                    class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 transition-all shadow-inner"
+                  />
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-zinc-500 mb-1.5"
+                  >HTTP Status Code</label
+                >
+                <input
+                  type="number"
+                  id="mock-status"
+                  value="200"
+                  class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 transition-all shadow-inner"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-zinc-500 mb-1.5"
+                  >Response Body (JSON)</label
+                >
+                <div
+                  id="mock-body-editor"
+                  class="w-full text-sm rounded-xl overflow-hidden border border-white/10 focus-within:border-violet-500 focus-within:ring-2 focus-within:ring-violet-500/30 transition-all shadow-inner"
+                ></div>
+              </div>
+              <button
+                id="add-mock-btn"
+                class="w-full bg-violet-600 hover:bg-violet-500 text-white px-4 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 mt-2 shadow-lg shadow-violet-900/20"
+              >
+                Save Mock Rule
+              </button>
+            </div>
+          </div>
+          <div class="lg:col-span-7">
+            <h3
+              class="text-sm font-bold text-zinc-300 mb-5 uppercase tracking-widest pl-1"
+            >
+              Active Rules
+            </h3>
+            <div id="mock-list" class="space-y-4"></div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="view-client"
+        class="hidden max-w-7xl mx-auto h-full flex flex-col pb-8"
+      >
+        <header class="mb-6 flex justify-between items-end">
+          <div>
+            <h2 class="text-2xl font-bold text-white tracking-tight">
+              Session-Aware API Client
+            </h2>
+            <p class="text-zinc-400 text-sm mt-1">
+              Execute requests using the active browser tab's session, cookies,
+              and tokens.
+            </p>
+          </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-0">
+          <div
+            class="lg:col-span-5 flex flex-col gap-5 bg-white/[0.02] border border-white/5 p-5 rounded-2xl shadow-xl backdrop-blur-sm h-fit"
+          >
+            <div
+              class="bg-blue-900/10 border border-blue-500/20 rounded-xl p-3.5 flex flex-col gap-2.5"
+            >
+              <div class="flex justify-between items-center">
+                <label
+                  class="text-[11px] font-bold text-blue-400 uppercase tracking-wider flex items-center gap-1.5"
+                >
+                  <svg
+                    class="w-3.5 h-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+                    ></path>
+                  </svg>
+                  Execution Context
+                </label>
+                <button
+                  id="refresh-tabs-btn"
+                  class="text-zinc-500 hover:text-blue-400 transition-colors flex items-center gap-1"
+                  title="Refresh Tabs"
+                >
+                  <svg
+                    class="w-3.5 h-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="relative w-full">
+                <input type="hidden" id="client-tab-input" value="" />
+                <button
+                  type="button"
+                  id="client-tab-trigger"
+                  class="w-full flex items-center justify-between bg-black/40 border border-black/50 hover:border-blue-500/30 rounded-lg px-3 py-2.5 text-xs font-medium text-zinc-300 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner text-left"
+                >
+                  <span id="client-tab-text" class="truncate pr-4"
+                    >Loading active tabs...</span
+                  >
+                  <svg
+                    id="client-tab-arrow"
+                    class="h-3.5 w-3.5 text-zinc-500 shrink-0 transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </button>
+
+                <div
+                  id="client-tab-dropdown"
+                  class="hidden absolute z-50 w-full mt-1.5 bg-[#18181b] border border-white/10 rounded-xl shadow-2xl overflow-y-auto max-h-48 py-1.5 backdrop-blur-md"
+                ></div>
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <div class="relative w-28 shrink-0">
+                <input type="hidden" id="client-method" value="GET" />
+                <button
+                  type="button"
+                  id="client-method-trigger"
+                  class="w-full h-full flex items-center justify-between bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs font-bold text-blue-400 focus:outline-none focus:border-blue-500 transition-colors shadow-inner"
+                >
+                  <span id="client-method-text">GET</span>
+                  <svg
+                    id="client-method-arrow"
+                    class="h-3.5 w-3.5 text-zinc-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </button>
+                <div
+                  id="client-method-dropdown"
+                  class="hidden absolute z-50 w-full mt-1.5 bg-[#18181b] border border-white/10 rounded-xl shadow-2xl py-1"
+                >
+                  <div
+                    class="client-option px-3 py-1.5 text-xs font-bold text-blue-400 hover:bg-white/10 cursor-pointer"
+                    data-value="GET"
+                  >
+                    GET
+                  </div>
+                  <div
+                    class="client-option px-3 py-1.5 text-xs font-bold text-green-400 hover:bg-white/10 cursor-pointer"
+                    data-value="POST"
+                  >
+                    POST
+                  </div>
+                  <div
+                    class="client-option px-3 py-1.5 text-xs font-bold text-yellow-400 hover:bg-white/10 cursor-pointer"
+                    data-value="PUT"
+                  >
+                    PUT
+                  </div>
+                  <div
+                    class="client-option px-3 py-1.5 text-xs font-bold text-orange-400 hover:bg-white/10 cursor-pointer"
+                    data-value="PATCH"
+                  >
+                    PATCH
+                  </div>
+                  <div
+                    class="client-option px-3 py-1.5 text-xs font-bold text-red-400 hover:bg-white/10 cursor-pointer"
+                    data-value="DELETE"
+                  >
+                    DELETE
                   </div>
                 </div>
               </div>
-              <div class="w-2/3">
-                <label class="block text-xs font-semibold text-zinc-500 mb-1.5"
-                  >Target URL (Contains)</label
-                >
+
+              <div class="flex-1 relative">
                 <input
                   type="text"
-                  id="mock-url"
-                  placeholder="/api/v1/users"
-                  class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition-all"
+                  id="client-url"
+                  placeholder="https://api.example.com/endpoint"
+                  class="w-full bg-black/50 border border-white/10 rounded-xl pl-3 pr-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all font-mono shadow-inner"
                 />
               </div>
             </div>
 
-            <div>
-              <label class="block text-xs font-semibold text-zinc-500 mb-1.5"
-                >HTTP Status Code</label
-              >
-              <input
-                type="number"
-                id="mock-status"
-                value="200"
-                class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500 transition-all"
-              />
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-zinc-500 mb-1.5"
-                >Response Body (JSON)</label
-              >
+            <div
+              class="flex flex-col border border-white/5 rounded-xl bg-[#282c34] overflow-hidden shadow-inner"
+            >
               <div
-                id="mock-body-editor"
-                class="w-full text-sm rounded-xl overflow-hidden border border-white/10 focus-within:border-violet-500 transition-all"
-              ></div>
+                class="flex items-center gap-1 bg-black/40 px-2 py-1.5 border-b border-white/5"
+              >
+                <button
+                  class="px-3 py-1 text-[10px] font-bold text-zinc-300 bg-white/10 rounded-md"
+                >
+                  Body (JSON)
+                </button>
+                <button
+                  class="px-3 py-1 text-[10px] font-bold text-zinc-600 hover:text-zinc-400 cursor-not-allowed"
+                >
+                  Headers
+                </button>
+                <button
+                  class="px-3 py-1 text-[10px] font-bold text-zinc-600 hover:text-zinc-400 cursor-not-allowed"
+                >
+                  Params
+                </button>
+              </div>
+              <div id="client-body-editor" class="text-sm"></div>
             </div>
 
             <button
-              id="add-mock-btn"
-              class="w-full bg-violet-600 hover:bg-violet-500 text-white px-4 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 mt-2"
+              id="client-send-btn"
+              class="w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2 group"
             >
-              Save Mock Rule
+              Execute Request
+              <svg
+                class="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                ></path>
+              </svg>
             </button>
           </div>
-        </section>
 
-        <section class="lg:col-span-7">
-          <h2
-            class="text-sm font-bold text-zinc-300 mb-5 uppercase tracking-widest pl-1"
+          <div
+            class="lg:col-span-7 flex flex-col h-full bg-white/[0.01] border border-white/5 rounded-2xl shadow-xl overflow-hidden backdrop-blur-sm"
           >
-            Active Mock Rules
-          </h2>
-          <div id="mock-list" class="space-y-3"></div>
-        </section>
-      </div>
-    </div>
+            <div
+              class="bg-black/40 px-5 py-3 border-b border-white/5 flex justify-between items-center"
+            >
+              <div class="flex gap-4">
+                <button
+                  class="text-xs font-bold text-blue-400 border-b-2 border-blue-400 pb-1"
+                >
+                  Response Payload
+                </button>
+                <button
+                  class="text-xs font-bold text-zinc-600 cursor-not-allowed pb-1"
+                >
+                  Headers
+                </button>
+              </div>
+              <span
+                id="client-response-status"
+                class="font-mono text-[10px] px-2 py-1 rounded bg-zinc-800/80 text-zinc-400 border border-white/5 shadow-sm"
+                >STATUS: READY</span
+              >
+            </div>
+            <div
+              id="client-response-editor"
+              class="flex-1 text-sm bg-black/20 overflow-y-auto"
+            ></div>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <script type="module" src="./options.ts"></script>
   </body>

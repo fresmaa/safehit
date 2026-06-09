@@ -3,7 +3,7 @@
   "name": "SafeHit",
   "version": "1.0.0",
   "description": "Protect production environments from accidental data mutations.",
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs", "activeTab"],
   "options_page": "src/options/index.html",
   "action": {
     "default_popup": "src/popup/index.html",
@@ -32,5 +32,6 @@
       "js": ["src/content/bridge.ts"],
       "run_at": "document_start"
     }
-  ]
+  ],
+  "host_permissions": ["<all_urls>"]
 }
