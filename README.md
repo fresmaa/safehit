@@ -1,21 +1,27 @@
-# 🛡️ SafeHit - QA Safeguard & Mocking Tool
+# 🛡️ SafeHit - QA Safeguard, Mocking Engine & API Client
 
-SafeHit is a modern, enterprise-grade Chrome Extension (Manifest V3) designed to protect Production environments from accidental CRUD operations by QA teams, while also providing a robust API Mocking engine.
+SafeHit is a modern, enterprise-grade Chrome Extension (Manifest V3) designed to protect Production environments from accidental CRUD operations by QA teams, while also providing a robust API Mocking engine and a Session-Aware API Client right inside your browser.
 
 ## ✨ Features
 
-*   **Production Safeguard**: Intercepts outgoing mutations (`POST`, `PUT`, `PATCH`, `DELETE`) to configured production URLs and prompts a beautifully designed warning modal.
-*   **Shadow DOM Isolation**: The warning modal is injected using Shadow DOM to ensure the extension's Tailwind styling never conflicts with the target website's CSS.
-*   **Real-time Dynamic Configuration**: Add or remove protected URLs directly from the extension Popup. Changes take effect instantly without needing to refresh the target page.
-*   **API Mocking (WIP)**: Intercept specific API calls and return custom JSON responses to test edge cases without hitting real servers.
-*   **Modern UI/UX**: Features a sleek, dark-mode Glassmorphism design inspired by native macOS components.
+* **Production Safeguard**: Intercepts outgoing mutations (`POST`, `PUT`, `PATCH`, `DELETE`) to configured production URLs and prompts a beautifully designed warning modal.
+* **Shadow DOM Isolation**: The warning modal is injected using Shadow DOM to ensure the extension's Tailwind styling never conflicts with the target website's CSS.
+* **Session-Aware API Client (Mini Postman)**: A built-in API tester that executes requests using the active browser tab's context. 
+    * **No CORS Issues**: Inherits the tab's origin and bypasses CORS restrictions.
+    * **Auto-Authentication**: Automatically attaches the active session's cookies and local storage tokens.
+    * **Advanced Request Builder**: Supports custom JSON Body, Headers (Auto-Merge), and Query Params (Auto-URL Encoded) powered by CodeMirror syntax highlighting.
+    * **Response Viewer**: Inspect Status Codes, JSON Payloads, and Response Headers instantly.
+* **Smart API Mocking**: Intercept specific API calls and return custom JSON responses to test frontend edge cases without hitting real servers. Includes a real-time toggle mechanism.
+* **Real-time Dynamic Configuration**: Add or remove protected URLs directly from the extension Popup. Changes take effect instantly without needing to refresh the target page.
+* **Modern UI/UX**: Features a sleek, dark-mode Glassmorphism design inspired by native macOS components and enterprise developer tools.
 
 ## 🛠️ Tech Stack
 
-*   **Framework**: [Vite](https://vitejs.dev/) + Vanilla TypeScript
-*   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-*   **Extension Tooling**: [@crxjs/vite-plugin](https://crxjs.dev/vite-plugin)
-*   **Architecture**: Manifest V3, Storage Sync API, Window postMessage Bridge (Isolated to Main World communication).
+* **Framework**: [Vite](https://vitejs.dev/) + Vanilla TypeScript
+* **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+* **Editor**: [CodeMirror 6](https://codemirror.net/) (JSON Syntax Highlighting & One Dark Theme)
+* **Extension Tooling**: [@crxjs/vite-plugin](https://crxjs.dev/vite-plugin)
+* **Architecture**: Manifest V3, Storage Sync API, Window postMessage Bridge, Content Script injection.
 
 ## 📂 Project Structure
 
@@ -23,8 +29,8 @@ SafeHit is a modern, enterprise-grade Chrome Extension (Manifest V3) designed to
 /safehit
 ├── public/                 # Static assets (Icons)
 ├── src/
-│   ├── content/            # Injected scripts (Interceptor, UI, Bridge)
-│   ├── options/            # Full-page options (Mock Rules Management)
+│   ├── content/            # Injected scripts (Interceptor, UI, Bridge for API Client)
+│   ├── options/            # Full-page Dashboard (Mock Rules & API Client Tester)
 │   ├── popup/              # Quick action popup (URL Safeguard Management)
 │   ├── styles/             # Tailwind global entries
 │   └── utils/              # Helpers (i18n, Storage sync)
@@ -65,11 +71,20 @@ Make sure you have [Node.js](https://nodejs.org/) installed (v16 or higher recom
 
 ## 💡 Usage
 
+### 1. Production Safeguard
 1. Click the SafeHit icon in your Chrome toolbar.
 2. In the target URL field, enter a domain you want to protect (e.g., `api.production.com`) and click **Add**.
 3. Navigate to a website that makes API calls to that domain.
 4. Trigger a `POST`, `PUT`, `PATCH`, or `DELETE` request.
 5. SafeHit will intercept the request and show a warning modal before the payload leaves the browser.
+
+### 2. Session-Aware API Client & Mocking Engine
+1. Right-click the SafeHit extension icon and select **Options** to open the Dashboard.
+2. **API Mocking**: Navigate to the "Mocking Engine" tab to define endpoint rules and custom JSON responses. Toggle them on/off to instantly manipulate frontend behavior.
+3. **API Client Tester**: Navigate to the "API Client" tab. 
+    * Select an active web tab from the **Execution Context** dropdown.
+    * Define your Method, URL, Body, Headers, and Params.
+    * Click **Execute Request** to fire the API call directly from that tab's session, utilizing its existing cookies and tokens seamlessly.
 
 ---
 *Built with ❤️ for better QA & Developer Experience.*
