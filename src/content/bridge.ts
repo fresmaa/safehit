@@ -66,14 +66,26 @@ chrome.runtime.onMessage.addListener(
       })
         .then(async (res) => {
           const status = res.status;
+
+          const responseHeaders: Record<string, string> = {};
+          res.headers.forEach((value, key) => {
+            responseHeaders[key] = value;
+          });
+
           const textData = await res.text();
           let jsonData = textData;
 
           try {
             jsonData = JSON.parse(textData);
-          } catch (e) {}
+          } catch (e) {
+          }
 
-          sendResponse({ success: true, status, data: jsonData });
+          sendResponse({
+            success: true,
+            status,
+            data: jsonData,
+            headers: responseHeaders,
+          });
         })
         .catch((err) => {
           sendResponse({ success: false, status: 500, data: err.message });

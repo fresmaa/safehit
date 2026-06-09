@@ -376,6 +376,20 @@ document.addEventListener("DOMContentLoaded", () => {
     parent: document.getElementById("client-response-editor") as HTMLDivElement,
   });
 
+  const clientResponseHeadersEditor = new EditorView({
+    doc: "// Response headers will appear here...",
+    extensions: [
+      basicSetup,
+      json(),
+      oneDark,
+      EditorView.editable.of(false),
+      EditorView.lineWrapping,
+    ],
+    parent: document.getElementById(
+      "client-response-headers-editor",
+    ) as HTMLDivElement,
+  });
+
   tabBodyBtn.addEventListener("click", () => switchEditorTab("body"));
   tabHeadersBtn.addEventListener("click", () => switchEditorTab("headers"));
   tabParamsBtn.addEventListener("click", () => switchEditorTab("params"));
@@ -398,6 +412,37 @@ document.addEventListener("DOMContentLoaded", () => {
     clientParamsContainer.style.display =
       activeTab === "params" ? "block" : "none";
   };
+
+  const resTabPayloadBtn = document.getElementById(
+    "res-tab-payload-btn",
+  ) as HTMLButtonElement;
+  const resTabHeadersBtn = document.getElementById(
+    "res-tab-headers-btn",
+  ) as HTMLButtonElement;
+  const resPayloadContainer = document.getElementById(
+    "client-response-editor",
+  ) as HTMLDivElement;
+  const resHeadersContainer = document.getElementById(
+    "client-response-headers-editor",
+  ) as HTMLDivElement;
+
+  const switchResTab = (tab: "payload" | "headers") => {
+    const activeClass =
+      "text-xs font-bold text-blue-400 border-b-2 border-blue-400 pb-1 transition-all";
+    const inactiveClass =
+      "text-xs font-bold text-zinc-600 hover:text-zinc-400 pb-1 transition-all border-b-2 border-transparent";
+
+    resTabPayloadBtn.className =
+      tab === "payload" ? activeClass : inactiveClass;
+    resTabHeadersBtn.className =
+      tab === "headers" ? activeClass : inactiveClass;
+
+    resPayloadContainer.style.display = tab === "payload" ? "block" : "none";
+    resHeadersContainer.style.display = tab === "headers" ? "block" : "none";
+  };
+
+  resTabPayloadBtn.addEventListener("click", () => switchResTab("payload"));
+  resTabHeadersBtn.addEventListener("click", () => switchResTab("headers"));
 
   clientMethodTrigger.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -506,7 +551,11 @@ document.addEventListener("DOMContentLoaded", () => {
     refreshTabsBtn.addEventListener("click", refreshTabsList);
   }
 
-  const updateResponseEditor = (text: string, status: number) => {
+  const updateResponseEditor = (
+    text: string,
+    status: number,
+    headersObj?: any,
+  ) => {
     clientResponseEditor.dispatch({
       changes: {
         from: 0,
@@ -514,13 +563,25 @@ document.addEventListener("DOMContentLoaded", () => {
         insert: text,
       },
     });
+
+    const headersText = headersObj
+      ? JSON.stringify(headersObj, null, 2)
+      : "// No headers received";
+    clientResponseHeadersEditor.dispatch({
+      changes: {
+        from: 0,
+        to: clientResponseHeadersEditor.state.doc.length,
+        insert: headersText,
+      },
+    });
+
     clientStatusSpan.textContent = `STATUS: ${status || "ERROR"}`;
     if (status >= 200 && status < 300) {
       clientStatusSpan.className =
-        "font-mono text-[11px] px-2.5 py-1 rounded-md bg-green-500/20 text-green-400";
+        "font-mono text-[10px] px-2 py-1 rounded bg-green-500/20 text-green-400 border border-green-500/10 shadow-sm";
     } else {
       clientStatusSpan.className =
-        "font-mono text-[11px] px-2.5 py-1 rounded-md bg-rose-500/20 text-rose-400";
+        "font-mono text-[10px] px-2 py-1 rounded bg-rose-500/20 text-rose-400 border border-rose-500/10 shadow-sm";
     }
   };
 
@@ -611,11 +672,16 @@ document.addEventListener("DOMContentLoaded", () => {
               typeof response.data === "object"
                 ? JSON.stringify(response.data, null, 2)
                 : response.data;
-            updateResponseEditor(stringifiedResult, response.status);
+            updateResponseEditor(
+              stringifiedResult,
+              response.status,
+              response.headers,
+            );
           } else {
             updateResponseEditor(
               `// Request Failed\n${JSON.stringify(response.data, null, 2)}`,
               response.status,
+              response.headers,
             );
           }
         },

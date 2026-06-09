@@ -456,12 +456,14 @@
             >
               <div class="flex gap-4">
                 <button
-                  class="text-xs font-bold text-blue-400 border-b-2 border-blue-400 pb-1"
+                  id="res-tab-payload-btn"
+                  class="text-xs font-bold text-blue-400 border-b-2 border-blue-400 pb-1 transition-all"
                 >
                   Response Payload
                 </button>
                 <button
-                  class="text-xs font-bold text-zinc-600 cursor-not-allowed pb-1"
+                  id="res-tab-headers-btn"
+                  class="text-xs font-bold text-zinc-600 hover:text-zinc-400 pb-1 transition-all border-b-2 border-transparent"
                 >
                   Headers
                 </button>
@@ -472,10 +474,17 @@
                 >STATUS: READY</span
               >
             </div>
-            <div
-              id="client-response-editor"
-              class="flex-1 text-sm bg-black/20 overflow-y-auto"
-            ></div>
+            <div class="relative flex-1 bg-black/20 overflow-hidden">
+              <div
+                id="client-response-editor"
+                class="absolute inset-0 overflow-y-auto text-sm block"
+              ></div>
+              <div
+                id="client-response-headers-editor"
+                class="absolute inset-0 overflow-y-auto text-sm hidden"
+                style="display: none"
+              ></div>
+            </div>
           </div>
         </div>
       </section>
