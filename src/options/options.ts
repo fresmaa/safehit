@@ -315,10 +315,41 @@ document.addEventListener("DOMContentLoaded", () => {
     "client-tab-arrow",
   ) as HTMLElement;
 
+  const tabBodyBtn = document.getElementById(
+    "tab-body-btn",
+  ) as HTMLButtonElement;
+  const tabHeadersBtn = document.getElementById(
+    "tab-headers-btn",
+  ) as HTMLButtonElement;
+  const clientBodyContainer = document.getElementById(
+    "client-body-editor",
+  ) as HTMLDivElement;
+  const clientHeadersContainer = document.getElementById(
+    "client-headers-editor",
+  ) as HTMLDivElement;
+
+  const clientMethodTrigger = document.getElementById(
+    "client-method-trigger",
+  ) as HTMLButtonElement;
+  const clientMethodDropdown = document.getElementById(
+    "client-method-dropdown",
+  ) as HTMLDivElement;
+  const clientMethodText = document.getElementById(
+    "client-method-text",
+  ) as HTMLSpanElement;
+  const clientMethodArrow = document.getElementById(
+    "client-method-arrow",
+  ) as HTMLElement;
+
   const clientBodyEditor = new EditorView({
     doc: "{\n  \n}",
     extensions: [basicSetup, json(), oneDark],
     parent: document.getElementById("client-body-editor") as HTMLDivElement,
+  });
+
+  const clientHeadersEditor = new EditorView({
+    extensions: [basicSetup, json(), oneDark],
+    parent: document.getElementById("client-headers-editor") as HTMLDivElement,
   });
 
   const clientResponseEditor = new EditorView({
@@ -333,18 +364,23 @@ document.addEventListener("DOMContentLoaded", () => {
     parent: document.getElementById("client-response-editor") as HTMLDivElement,
   });
 
-  const clientMethodTrigger = document.getElementById(
-    "client-method-trigger",
-  ) as HTMLButtonElement;
-  const clientMethodDropdown = document.getElementById(
-    "client-method-dropdown",
-  ) as HTMLDivElement;
-  const clientMethodText = document.getElementById(
-    "client-method-text",
-  ) as HTMLSpanElement;
-  const clientMethodArrow = document.getElementById(
-    "client-method-arrow",
-  ) as HTMLElement;
+  tabBodyBtn.addEventListener("click", () => {
+    tabBodyBtn.className =
+      "px-3 py-1 text-[10px] font-bold text-zinc-300 bg-white/10 rounded-md transition-colors";
+    tabHeadersBtn.className =
+      "px-3 py-1 text-[10px] font-bold text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-md transition-colors";
+    clientBodyContainer.classList.remove("hidden");
+    clientHeadersContainer.classList.add("hidden");
+  });
+
+  tabHeadersBtn.addEventListener("click", () => {
+    tabHeadersBtn.className =
+      "px-3 py-1 text-[10px] font-bold text-zinc-300 bg-white/10 rounded-md transition-colors";
+    tabBodyBtn.className =
+      "px-3 py-1 text-[10px] font-bold text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-md transition-colors";
+    clientHeadersContainer.classList.remove("hidden");
+    clientBodyContainer.classList.add("hidden");
+  });
 
   clientMethodTrigger.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -476,6 +512,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const method = clientMethodInput.value;
     const bodyText = clientBodyEditor.state.doc.toString().trim();
 
+    const headersText = clientHeadersEditor.state.doc.toString().trim();
+    let customHeadersObj = {};
+    if (headersText && headersText !== "{\n  \n}" && headersText !== "{}") {
+      try {
+        customHeadersObj = JSON.parse(headersText);
+      } catch (e) {
+        alert("Invalid JSON format in Headers tab!");
+        return;
+      }
+    }
+
     if (!targetUrl) {
       alert("Please enter a valid Target URL!");
       return;
@@ -483,24 +530,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     clientSendBtn.disabled = true;
     clientSendBtn.textContent = "Executing via Tab...";
-    clientStatusSpan.textContent = "STATUS: LOADING";
-    clientStatusSpan.className =
-      "font-mono text-[11px] px-2.5 py-1 rounded-md bg-yellow-500/20 text-yellow-400";
 
     try {
       const selectedTabId = parseInt(clientTabInput.value);
-
-      if (!selectedTabId || isNaN(selectedTabId)) {
-        throw new Error(
-          "Please select a valid Execution Context (Browser Tab) from the dropdown.",
-        );
-      }
+      if (!selectedTabId || isNaN(selectedTabId))
+        throw new Error("Please select a valid Execution Context.");
 
       chrome.tabs.sendMessage(
         selectedTabId,
         {
           action: "SAFEHIT_EXECUTE_CLIENT_REQUEST",
-          payload: { method, url: targetUrl, body: bodyText },
+          payload: {
+            method,
+            url: targetUrl,
+            body: bodyText,
+            headers: customHeadersObj,
+          },
         },
         (response) => {
           clientSendBtn.disabled = false;

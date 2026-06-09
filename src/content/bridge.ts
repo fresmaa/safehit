@@ -32,33 +32,35 @@ chrome.runtime.onMessage.addListener(
     sendResponse: (response?: any) => void,
   ) => {
     if (message.action === "SAFEHIT_EXECUTE_CLIENT_REQUEST") {
-      const { method, url, body } = message.payload;
+      const { method, url, body, headers: customHeaders } = message.payload;
 
       console.log(`[SafeHit Bridge] Executing request: ${method} ${url}`);
 
       let token =
         localStorage.getItem("token") ||
         localStorage.getItem("accessToken") ||
-        localStorage.getItem("access_token") ||
         sessionStorage.getItem("token") ||
-        sessionStorage.getItem("accessToken") ||
         "";
 
-      const headers: Record<string, string> = {
+      const finalHeaders: Record<string, string> = {
         "Content-Type": "application/json",
+        ...(customHeaders || {}),
       };
 
       if (token) {
         token = token.replace(/^["']|["']$/g, "");
-        headers["Authorization"] = token.toLowerCase().startsWith("bearer")
-          ? token
-          : `Bearer ${token}`;
-        console.log("[SafeHit Bridge] Auth Token attached automatically!");
+        if (!finalHeaders["Authorization"]) {
+          finalHeaders["Authorization"] = token
+            .toLowerCase()
+            .startsWith("bearer")
+            ? token
+            : `Bearer ${token}`;
+        }
       }
 
       fetch(url, {
         method: method,
-        headers: headers,
+        headers: finalHeaders,
         body: method !== "GET" ? body : undefined,
         credentials: "include",
       })
@@ -69,8 +71,7 @@ chrome.runtime.onMessage.addListener(
 
           try {
             jsonData = JSON.parse(textData);
-          } catch (e) {
-          }
+          } catch (e) {}
 
           sendResponse({ success: true, status, data: jsonData });
         })

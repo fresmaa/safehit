@@ -393,22 +393,28 @@
                 class="flex items-center gap-1 bg-black/40 px-2 py-1.5 border-b border-white/5"
               >
                 <button
-                  class="px-3 py-1 text-[10px] font-bold text-zinc-300 bg-white/10 rounded-md"
+                  id="tab-body-btn"
+                  class="px-3 py-1 text-[10px] font-bold text-zinc-300 bg-white/10 rounded-md transition-colors"
                 >
                   Body (JSON)
                 </button>
                 <button
-                  class="px-3 py-1 text-[10px] font-bold text-zinc-600 hover:text-zinc-400 cursor-not-allowed"
+                  id="tab-headers-btn"
+                  class="px-3 py-1 text-[10px] font-bold text-zinc-500 hover:text-zinc-300 hover:bg-white/5 rounded-md transition-colors"
                 >
                   Headers
                 </button>
                 <button
-                  class="px-3 py-1 text-[10px] font-bold text-zinc-600 hover:text-zinc-400 cursor-not-allowed"
+                  class="px-3 py-1 text-[10px] font-bold text-zinc-600 cursor-not-allowed"
                 >
                   Params
                 </button>
               </div>
-              <div id="client-body-editor" class="text-sm"></div>
+
+              <div class="relative w-full">
+                <div id="client-body-editor" class="text-sm"></div>
+                <div id="client-headers-editor" class="text-sm hidden"></div>
+              </div>
             </div>
 
             <button
