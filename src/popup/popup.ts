@@ -5,7 +5,7 @@ import { StorageHelper } from "../utils/storage";
 document.addEventListener("DOMContentLoaded", async () => {
   // DOM Elements (Safeguard)
   const urlInput = document.getElementById("url-input") as HTMLInputElement;
-  const addBtn = document.getElementById("add-btn") as HTMLButtonElement;
+  const addBtn = document.getElementById("add-url-btn") as HTMLButtonElement;
   const urlList = document.getElementById("url-list") as HTMLDivElement;
 
   // DOM Elements (Tabs & Mocking)
@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const mockCountSpan = document.getElementById(
     "mock-count",
   ) as HTMLSpanElement;
+  const tabDescription = document.getElementById("tab-description");
 
   // ==========================================
   // TAB SWITCHING LOGIC
@@ -164,6 +165,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   urlInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") addBtn.click();
   });
+
+  const openApiTesterBtn = document.getElementById("open-api-tester-btn");
+  if (openApiTesterBtn) {
+    openApiTesterBtn.addEventListener("click", () => {
+      chrome.runtime.openOptionsPage();
+    });
+  }
+
+  if (btnTabSafeguard && btnTabMocking && tabDescription) {
+    btnTabSafeguard.addEventListener("click", () => {
+      tabDescription.textContent =
+        "Prevents accidental mutation requests (POST, PUT, DELETE) to production URLs.";
+    });
+
+    btnTabMocking.addEventListener("click", () => {
+      tabDescription.textContent =
+        "Intercept API calls and return custom JSON responses for frontend edge-case testing.";
+    });
+  }
 
   renderData();
 });

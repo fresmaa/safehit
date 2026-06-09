@@ -47,6 +47,14 @@
       </button>
     </div>
 
+    <p
+      id="tab-description"
+      class="text-[10px] text-zinc-500 text-center mb-4 px-2 leading-relaxed transition-all duration-300"
+    >
+      Prevents accidental mutation requests (POST, PUT, DELETE) to production
+      URLs.
+    </p>
+
     <div id="content-safeguard" class="block">
       <label
         class="block text-[10px] font-bold text-zinc-500 mb-1.5 uppercase tracking-wider"
@@ -60,10 +68,23 @@
           class="flex-1 bg-black/50 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition-all shadow-inner"
         />
         <button
-          id="add-btn"
-          class="bg-white text-black px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:bg-zinc-200 active:scale-95 shadow-sm"
+          id="add-url-btn"
+          class="bg-white/5 hover:bg-white/10 border border-white/10 text-blue-400 hover:text-blue-300 w-10 h-10 rounded-xl transition-all flex items-center justify-center flex-shrink-0"
+          aria-label="Add URL"
         >
-          Add
+          <svg
+            class="w-5 h-5 stroke-[2.5px]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            ></path>
+          </svg>
         </button>
       </div>
 
@@ -126,6 +147,38 @@
         </svg>
       </button>
     </div>
+
+    <!-- Divider -->
+    <div class="h-px w-full bg-white/10 my-3"></div>
+
+    <button
+      id="open-api-tester-btn"
+      class="relative w-full flex items-center justify-center gap-2 bg-[#1a1b23] hover:bg-[#232530] text-zinc-300 hover:text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all border border-white/5 hover:border-blue-500/30 group"
+    >
+      <svg
+        class="w-3.5 h-3.5 text-blue-400 group-hover:scale-110 transition-transform"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+        ></path>
+      </svg>
+      Open API Tester
+      <span
+        class="absolute -top-1.5 -right-1 bg-blue-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded shadow-[0_0_8px_rgba(59,130,246,0.6)]"
+        >NEW</span
+      >
+    </button>
+
+    <p class="text-[9px] text-zinc-500 text-center mt-1.5 px-2">
+      Test APIs directly using the active browser session, bypassing CORS
+      restrictions.
+    </p>
 
     <script type="module" src="./popup.ts"></script>
   </body>
