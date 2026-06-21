@@ -54,6 +54,6 @@ window.fetch = async function (...args) {
     if (!isConfirmed) return Promise.reject(new Error("Aborted by SafeHit"));
   }
 
-  // Jika tidak di-mock dan tidak diblokir, lanjutkan request aslinya
+  // Continue with the original fetch
   return originalFetch.apply(this, args);
 };
