@@ -590,7 +590,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const method = clientMethodInput.value;
     const bodyText = clientBodyEditor.state.doc.toString().trim();
 
-    // Validasi Headers
+    // Validate Headers
     const headersText = clientHeadersEditor.state.doc.toString().trim();
     let customHeadersObj = {};
     if (headersText && headersText !== "{\n  \n}" && headersText !== "{}") {
