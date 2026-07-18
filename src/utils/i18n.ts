@@ -15,9 +15,20 @@ const languages = {
   },
 };
 
-// Change 'en' to 'id' to set Indonesian as the default language
-type LanguageKey = keyof typeof languages.en;
-const currentLang = "en";
+export type LanguageKey = keyof typeof languages.en;
+export type Language = keyof typeof languages;
+
+const DEFAULT_LANG: Language = "en";
+
+let currentLang: Language = DEFAULT_LANG;
+
+export const setLanguage = (lang: Language): void => {
+  if (lang in languages) {
+    currentLang = lang;
+  }
+};
+
+export const getLanguage = (): Language => currentLang;
 
 export const t = (key: LanguageKey): string => {
   return languages[currentLang][key];

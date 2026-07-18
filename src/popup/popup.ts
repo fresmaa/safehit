@@ -185,5 +185,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  const langSelect = document.getElementById("lang-select") as HTMLSelectElement;
+  if (langSelect) {
+    chrome.storage.sync.get("safeHitLanguage", (data) => {
+      langSelect.value = (data.safeHitLanguage as string) || "en";
+    });
+
+    langSelect.addEventListener("change", () => {
+      chrome.storage.sync.set({ safeHitLanguage: langSelect.value });
+    });
+  }
+
   renderData();
 });
