@@ -1,7 +1,6 @@
 import { showWarningModal } from "./ui";
 import { SafeHitConfig, MockRule, SafeguardRule, matchUrl } from "../utils/storage";
 import { logger } from "../utils/logger";
-import { setLanguage, Language } from "../utils/i18n";
 
 let activeConfig: SafeHitConfig = { blockedUrls: [], mockRules: [] };
 let configReady = false;
@@ -19,9 +18,6 @@ window.addEventListener("message", (event) => {
   ) {
     if (event.data.payload) {
       activeConfig = event.data.payload;
-    }
-    if (event.data.language) {
-      setLanguage(event.data.language as Language);
     }
     if (!configReady) {
       configReady = true;

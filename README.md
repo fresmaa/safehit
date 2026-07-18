@@ -25,7 +25,6 @@ SafeHit is a modern, enterprise-grade Browser Extension (Manifest V3) designed t
 * **Smart API Mocking**: Intercept specific API calls and return custom JSON responses to test frontend edge cases without hitting real servers.
     * **Flexible URL Matching**: Choose between Contains, Exact, or Regex matching modes for precise control over which requests get mocked.
     * **Real-time Toggle**: Enable/disable mock rules instantly without refreshing the page.
-* **Multi-Language Support**: Switch between English and Bahasa Indonesia directly from the popup. Language preference syncs across all browser tabs.
 * **Real-time Dynamic Configuration**: Add or remove protected URLs directly from the extension Popup. Changes take effect instantly without needing to refresh the target page.
 * **Modern UI/UX**: Features a sleek, dark-mode Glassmorphism design inspired by native macOS components and enterprise developer tools.
 
@@ -120,7 +119,7 @@ You can install the stable version directly from the [Microsoft Edge Add-ons Sto
 
 ### Testing
 
-SafeHit includes a test suite powered by Vitest. Tests cover core functionality like URL matching and i18n:
+SafeHit includes a test suite powered by Vitest. Tests cover core functionality like URL matching:
 
 ```bash
 npm test
@@ -156,11 +155,6 @@ npm test
 3. Select an active web tab from the **Execution Context** dropdown.
 4. Define your Method, URL, Body, Headers, and Params.
 5. Click **Execute Request** to fire the API call directly from that tab's session, utilizing its existing cookies and tokens seamlessly.
-
-### 4. Language Settings
-1. Click the SafeHit icon in your browser toolbar.
-2. At the bottom of the popup, select your preferred language (English or Bahasa Indonesia).
-3. The language preference syncs instantly across all browser tabs.
 
 ## 🔒 Security & Privacy
 

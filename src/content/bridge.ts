@@ -1,23 +1,12 @@
 import { StorageHelper } from "../utils/storage";
-import { Language } from "../utils/i18n";
 import { logger } from "../utils/logger";
-
-const getLanguage = (): Promise<Language> => {
-  return new Promise((resolve) => {
-    chrome.storage.sync.get("safeHitLanguage", (data) => {
-      resolve((data.safeHitLanguage as Language) || "en");
-    });
-  });
-};
 
 const syncConfigToMainWorld = async () => {
   const config = await StorageHelper.getConfig();
-  const language = await getLanguage();
   window.postMessage(
     {
       source: "SAFEHIT_BRIDGE",
       payload: config,
-      language,
     },
     "*",
   );
@@ -26,26 +15,14 @@ const syncConfigToMainWorld = async () => {
 syncConfigToMainWorld();
 
 chrome.storage.onChanged.addListener((changes: any, namespace: string) => {
-  if (namespace === "sync") {
-    if (changes.safeHitConfig) {
-      window.postMessage(
-        {
-          source: "SAFEHIT_BRIDGE",
-          payload: changes.safeHitConfig.newValue,
-        },
-        "*",
-      );
-    }
-    if (changes.safeHitLanguage) {
-      window.postMessage(
-        {
-          source: "SAFEHIT_BRIDGE",
-          payload: null,
-          language: changes.safeHitLanguage.newValue,
-        },
-        "*",
-      );
-    }
+  if (namespace === "sync" && changes.safeHitConfig) {
+    window.postMessage(
+      {
+        source: "SAFEHIT_BRIDGE",
+        payload: changes.safeHitConfig.newValue,
+      },
+      "*",
+    );
   }
 });
 
