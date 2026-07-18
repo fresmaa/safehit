@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "SafeHit",
   "version": "1.1.0",
-  "description": "Protect production environments from accidental data mutations.",
+  "description": "Protect production environments from accidental mutations. Features API mocking engine and session-aware API client.",
   "permissions": ["storage", "tabs", "activeTab"],
   "options_page": "src/options/index.html",
   "action": {
