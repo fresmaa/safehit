@@ -14,7 +14,6 @@ const MUTATION_METHODS = ["POST", "PUT", "PATCH", "DELETE"];
 
 window.addEventListener("message", (event) => {
   if (
-    event.source === window &&
     event.data &&
     event.data.source === "SAFEHIT_BRIDGE"
   ) {
