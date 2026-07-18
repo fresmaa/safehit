@@ -1,3 +1,5 @@
+export type MatchType = "contains" | "exact" | "regex";
+
 export interface MockRule {
   id: string;
   url: string;
@@ -5,6 +7,7 @@ export interface MockRule {
   status: number;
   responseBody: string;
   active: boolean;
+  matchType: MatchType;
 }
 
 export interface SafeguardRule {
@@ -18,7 +21,6 @@ export interface SafeHitConfig {
 }
 
 export const StorageHelper = {
-  // Retrieves configuration from Chrome Storage
   getConfig: async (): Promise<SafeHitConfig> => {
     return new Promise((resolve) => {
       chrome.storage.sync.get("safeHitConfig", (data) => {
@@ -32,7 +34,11 @@ export const StorageHelper = {
         });
 
         config.mockRules = (config.mockRules || []).map((item: any) => {
-          return item.active === undefined ? { ...item, active: true } : item;
+          return {
+            ...item,
+            active: item.active === undefined ? true : item.active,
+            matchType: item.matchType || "contains",
+          };
         });
 
         resolve(config);
@@ -40,7 +46,6 @@ export const StorageHelper = {
     });
   },
 
-  // Saves configuration to Chrome Storage
   saveConfig: async (newConfig: SafeHitConfig): Promise<void> => {
     return new Promise((resolve) => {
       chrome.storage.sync.set({ safeHitConfig: newConfig }, () => {
@@ -48,4 +53,24 @@ export const StorageHelper = {
       });
     });
   },
+};
+
+export const matchUrl = (
+  requestUrl: string,
+  ruleUrl: string,
+  matchType: MatchType,
+): boolean => {
+  switch (matchType) {
+    case "exact":
+      return requestUrl === ruleUrl;
+    case "regex":
+      try {
+        return new RegExp(ruleUrl).test(requestUrl);
+      } catch {
+        return false;
+      }
+    case "contains":
+    default:
+      return requestUrl.includes(ruleUrl);
+  }
 };

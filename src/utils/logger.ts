@@ -4,4 +4,4 @@ export const logger = {
   warn: (...args: any[]) => console.warn("[SafeHit]", ...args),
 };
 
-logger.log("Logger initialized");
+
