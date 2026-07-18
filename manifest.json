@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SafeHit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Protect production environments from accidental data mutations.",
   "permissions": ["storage", "tabs", "activeTab"],
   "options_page": "src/options/index.html",
