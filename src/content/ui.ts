@@ -12,6 +12,9 @@ export const showWarningModal = (
     const shadow = container.attachShadow({ mode: "closed" });
     const wrapper = document.createElement("div");
 
+    const titleId = "safehit-modal-title";
+    const descId = "safehit-modal-desc";
+
     wrapper.innerHTML = `
       <style>
         :host {
@@ -41,6 +44,7 @@ export const showWarningModal = (
           display: flex; flex-direction: column; align-items: center;
           box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05) inset;
           animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+          outline: none;
         }
 
         .icon-container {
@@ -85,16 +89,19 @@ export const showWarningModal = (
           transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
           box-shadow: 0 4px 14px 0 rgba(139, 92, 246, 0.39);
         }
-        .btn-submit:hover { transform: translateY(-2px); background: var(--brand-hover); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.23); }
+        .btn-submit:hover, .btn-submit:focus-visible { transform: translateY(-2px); background: var(--brand-hover); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.23); }
         .btn-submit:active { transform: translateY(0); }
+        .btn-submit:focus-visible { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
 
         .btn-cancel {
           background: transparent; color: var(--text-muted);
           border: none; margin-top: 16px; cursor: pointer;
           font-size: 14px; font-weight: 500; padding: 8px;
           transition: color 0.2s ease;
+          border-radius: 8px;
         }
-        .btn-cancel:hover { color: white; }
+        .btn-cancel:hover, .btn-cancel:focus-visible { color: white; }
+        .btn-cancel:focus-visible { outline: 2px solid var(--text-muted); outline-offset: 2px; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUpFade { 
@@ -103,12 +110,12 @@ export const showWarningModal = (
         }
       </style>
       <div class="overlay">
-        <div class="modal">
+        <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="${titleId}" aria-describedby="${descId}" tabindex="-1">
           <div class="icon-container">
             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
           </div>
-          <h2 class="title">${t("title")}</h2>
-          <div class="info-box">
+          <h2 id="${titleId}" class="title">${t("title")}</h2>
+          <div id="${descId}" class="info-box">
             <p class="info-text">
               ${t("warning")} <span class="method-badge">${method}</span> ${t("methodLabel")}
               <span class="url-text">${url}</span>
@@ -121,9 +128,17 @@ export const showWarningModal = (
     `;
     shadow.appendChild(wrapper);
 
+    const overlay = shadow.querySelector(".overlay") as HTMLElement;
+    const btnSubmit = shadow.getElementById("btn-submit") as HTMLButtonElement;
+    const btnCancel = shadow.getElementById("btn-cancel") as HTMLButtonElement;
+    const focusableElements = [btnCancel, btnSubmit];
+    let isClosing = false;
+
     const close = (result: boolean) => {
-      // Add exit animation before removing from DOM
-      const overlay = shadow.querySelector(".overlay") as HTMLElement;
+      if (isClosing) return;
+      isClosing = true;
+
+      document.removeEventListener("keydown", onKeyDown);
       overlay.style.opacity = "0";
       overlay.style.transition = "opacity 0.2s ease";
       setTimeout(() => {
@@ -132,11 +147,48 @@ export const showWarningModal = (
       }, 200);
     };
 
-    shadow
-      .getElementById("btn-cancel")
-      ?.addEventListener("click", () => close(false));
-    shadow
-      .getElementById("btn-submit")
-      ?.addEventListener("click", () => close(true));
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
+        close(false);
+        return;
+      }
+
+      if (e.key === "Tab") {
+        const currentIndex = focusableElements.indexOf(
+          shadow.activeElement as HTMLButtonElement,
+        );
+        let nextIndex: number;
+
+        if (e.shiftKey) {
+          nextIndex =
+            currentIndex <= 0
+              ? focusableElements.length - 1
+              : currentIndex - 1;
+        } else {
+          nextIndex =
+            currentIndex >= focusableElements.length - 1
+              ? 0
+              : currentIndex + 1;
+        }
+
+        e.preventDefault();
+        focusableElements[nextIndex].focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) {
+        close(false);
+      }
+    });
+
+    btnCancel.addEventListener("click", () => close(false));
+    btnSubmit.addEventListener("click", () => close(true));
+
+    btnCancel.focus();
   });
 };
