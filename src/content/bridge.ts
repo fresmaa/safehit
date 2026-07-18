@@ -1,11 +1,23 @@
 import { StorageHelper } from "../utils/storage";
+import { Language } from "../utils/i18n";
+import { logger } from "../utils/logger";
+
+const getLanguage = (): Promise<Language> => {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get("safeHitLanguage", (data) => {
+      resolve((data.safeHitLanguage as Language) || "en");
+    });
+  });
+};
 
 const syncConfigToMainWorld = async () => {
   const config = await StorageHelper.getConfig();
+  const language = await getLanguage();
   window.postMessage(
     {
       source: "SAFEHIT_BRIDGE",
       payload: config,
+      language,
     },
     "*",
   );
@@ -14,14 +26,26 @@ const syncConfigToMainWorld = async () => {
 syncConfigToMainWorld();
 
 chrome.storage.onChanged.addListener((changes: any, namespace: string) => {
-  if (namespace === "sync" && changes.safeHitConfig) {
-    window.postMessage(
-      {
-        source: "SAFEHIT_BRIDGE",
-        payload: changes.safeHitConfig.newValue,
-      },
-      "*",
-    );
+  if (namespace === "sync") {
+    if (changes.safeHitConfig) {
+      window.postMessage(
+        {
+          source: "SAFEHIT_BRIDGE",
+          payload: changes.safeHitConfig.newValue,
+        },
+        "*",
+      );
+    }
+    if (changes.safeHitLanguage) {
+      window.postMessage(
+        {
+          source: "SAFEHIT_BRIDGE",
+          payload: null,
+          language: changes.safeHitLanguage.newValue,
+        },
+        "*",
+      );
+    }
   }
 });
 
@@ -34,13 +58,27 @@ chrome.runtime.onMessage.addListener(
     if (message.action === "SAFEHIT_EXECUTE_CLIENT_REQUEST") {
       const { method, url, body, headers: customHeaders } = message.payload;
 
-      console.log(`[SafeHit Bridge] Executing request: ${method} ${url}`);
+      logger.log(`Bridge executing request: ${method} ${url}`);
 
-      let token =
-        localStorage.getItem("token") ||
-        localStorage.getItem("accessToken") ||
-        sessionStorage.getItem("token") ||
-        "";
+      const TOKEN_KEYS = [
+        "token",
+        "accessToken",
+        "access_token",
+        "authToken",
+        "auth_token",
+        "jwt",
+        "id_token",
+        "idToken",
+        "apiKey",
+        "api_key",
+      ];
+
+      let token = "";
+      for (const key of TOKEN_KEYS) {
+        token =
+          localStorage.getItem(key) || sessionStorage.getItem(key) || "";
+        if (token) break;
+      }
 
       const finalHeaders: Record<string, string> = {
         "Content-Type": "application/json",
@@ -78,6 +116,7 @@ chrome.runtime.onMessage.addListener(
           try {
             jsonData = JSON.parse(textData);
           } catch (e) {
+            logger.log("Response is not valid JSON, returning as text");
           }
 
           sendResponse({
@@ -88,6 +127,7 @@ chrome.runtime.onMessage.addListener(
           });
         })
         .catch((err) => {
+          logger.error("Request failed:", err.message);
           sendResponse({ success: false, status: 500, data: err.message });
         });
 
